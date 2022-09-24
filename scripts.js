@@ -1,4 +1,5 @@
 //hw 7
+/*
 console.log('HW #10: Калькулятор' + '\n')
 
 let Calc = function() {
@@ -44,9 +45,10 @@ let Calc = function() {
 let calc = new Calc();
 //calc.on();
 //console.log(calc);
-
+*/
 
 //hw 10
+/*
 console.log('HW #10' + '\n')
 
 let Calc2 = function() {
@@ -78,33 +80,33 @@ let Calc2 = function() {
 let calc2 = new Calc2();
 //calc2.on();
 console.log(calc2);
-
-//допольнительное задание
+*/
+//дополнительное задание
 console.log('дополнительное задание' + '\n')
+
 
 let body = document.querySelector('body');
 
 let CreateElement = function(element){
   this.elem = element;
- 
+}; 
 
-  this.create = function(tagName){
+CreateElement.prototype.create = function(tagName){
     this.elem = document.createElement(tagName);
-
+    //this.attr();
     return this.elem;
-  }
-  
-  this.attr = function(element, name, value){
-    if(!value) {
-      this.elem = element.setAttribute(name);
-      return this.elem;
-    }else{
-      this.elem = element.setAttribute(name, value);
-      return this.element;
-    } 
-  }
+}
 
-  this.html = function(element, value){
+CreateElement.prototype.attr = function(element, attributes = []){
+  if(attributes.length > 0){
+    attributes.forEach(attr => {
+      element.setAttribute(attr[0], attr[1]);
+    });
+  }      
+      return this.elem
+}
+
+CreateElement.prototype.html = function(element, value){
     console.log(element);
     if(value){
       element.innerHTML += value;
@@ -114,38 +116,38 @@ let CreateElement = function(element){
       return this.elem;
     } 
   }
-
-  this.search = function(element, selector){
+/*
+CreateElement.prototype.search = function(element, selector){
     this.elems = this.document.querySelectorAll(selector);
-
     return this.elems;
   }
+*/
 
-  this.addClass = function(element, className) {
+
+CreateElement.prototype.addClass = function(element, className) {
     this.elem = element.classList.add(className);
-
     return this.elem;
   }
 
-  this.removeClass = function(className){
+CreateElement.prototype.removeClass = function(element, className){
     this.elem = element.classList.remove(className);
-
     return this.elem;
   }
 
-  this.toggleClass = function(className) {
+
+CreateElement.prototype.toggleClass = function(element, className) {
     this.elem = element.classList.toggle(className);
-
     return this.elem;
   }
 
-  this.hasClass = function(className) {
+CreateElement.prototype.hasClass = function(element, className) {
     this.elem = element.classList.contains(className);
-
+    if(this.elem) console.log("The element has got the class '" + className + "'.");
+    else ("The element hasn't got the class '" + className + "'.")
     return this.elem;
   }
 
-  this.append = function(element, newElement, beforeElement){
+CreateElement.prototype.append = function(element, newElement, beforeElement){
     if(beforeElement) {
       this.elem = element.before(newElement);
       return this.elem;
@@ -155,44 +157,36 @@ let CreateElement = function(element){
     } 
   }
 
-  this.on = function(element, eventName, funcName){
-    element.addEventListener(eventName, funcName(this.e));
+CreateElement.prototype.on = function(element, eventName, funcName){
+    element.addEventListener(eventName, funcName);
   }
-};
+
+
 
 let createElement = new CreateElement();
 
 let div = 'div';
 let newElem = createElement.create(div);
+console.log(newElem);
 
-let id = 'id',
-    idText = 'block';
-createElement.attr(newElem, id, idText);
+
+let attr = [['id', 'block']];
+createElement.attr(newElem, attr);
 
 let value = 'Some inner text';
 createElement.html(newElem, value);
 
 let className = 'promo__block';
 createElement.addClass(newElem, className);
+createElement.hasClass(newElem, className);
+console.log(newElem);
+
 
 createElement.append(body, newElem);
 
-const alertf = function(){
-  alert('it works');
+const funcName = function(){
+  console.log('it works');
 };
-createElement.on(newElem, 'click', alertf);
-console.log(createElement, newElem);
+createElement.on(newElem, 'click', funcName);
 
 
-
-
-
-
-
-/*
-createElement.attr();
-console.log(createElement);
-
-createElement.html();
-console.log(createElement);
-*/
