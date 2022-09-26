@@ -1,192 +1,190 @@
-//hw 7
-/*
-console.log('HW #10: Калькулятор' + '\n')
+class Contacts {
+  constructor(data) {
+      this.id = 0;
+      this.contacts = [];
+      
+  }
 
-let Calc = function() {
+  add(data) {
+      if(!data.name || !data.phone) return;
+      this.contact = new User(data);
+      this.data = data;
+      
+      let id = this.id++;
+      Object.assign(this.data, this.id);
+      this.contacts.push(this.contact);
+  }
 
-    this.on = function() {
-        this.switch = confirm('Вы хотите включить калькулятор?');
-        if(this.switch) this.get();
-    };
+  edit(id, contact) {
+      this.contacts.forEach(contact => {
+          if (contact.id === id) {
+              Object.assign(this.data, contact);
+          }
+      });
+          
 
-    this.get = function(){
-      if (this.switch) {
-                  this.a = +prompt('Введите число a');
-                  this.b = +prompt('Введите число b');
-                  this.sign = prompt('Введите знак: +, -, *, /');
-                  this.operation();
-      }
-    };
+  }
+
+  remove(id) {
+      console.log(this.contacts);
+      this.contacts= this.contacts.filter(contact => contact.id !== id);
+  }
+
+  get() {}
+}
 
 
-    this.operation = function() {
-        switch(this.sign) {
-            case '+':
-                this.result = this.a + this.b;
-            break; 
-            case '-':
-                this.result = this.a - this.b;
-            break;
-            case '*':
-                this.result = this.a * this.b;
-            break;
-            case '/':
-                this.result = this.a / this.b;
-            break;
-            default: this.result = 0;
-        }
-        this.show();
-    };
-    this.show = function() {
-        alert(this.a + ' ' + this.sign + ' ' + this.b + ' = ' + this.result)
-    };
-};
 
-let calc = new Calc();
-//calc.on();
-//console.log(calc);
-*/
-
-//hw 10
-/*
-console.log('HW #10' + '\n')
-
-let Calc2 = function() {
-  Calc.apply(this, arguments);
-
-  let parentOperation = this.operation;
-  let parentOn = this.on;
-
-    this.get = function(){
-      if (this.switch) {
-                  this.a = +prompt('Введите число a');
-                  this.b = +prompt('Введите число b');
-                  this.sign = prompt('Введите знак: +, -, *, /, %');
-                  this.operation(this.sign);
-      }
-    };
+class User extends Contacts {
+  constructor(data) {
+      super(data);
+      this.id = data.id;
+      this.name = data.name,
+      this.email = data.email,
+      this.address = data.address,
+      this.phone = data.phone
+     
+  }
   
-  this.operation = function(sign){
-    if(this.sign === '%') {
-      this.result = this.a * (this.b / 100);
-    }else{
-      parentOperation.call(this);
-    };
-    
-    this.show();
-  };
-};
 
-let calc2 = new Calc2();
-//calc2.on();
-console.log(calc2);
-*/
-//дополнительное задание
-console.log('дополнительное задание' + '\n')
-
-
-let body = document.querySelector('body');
-
-let CreateElement = function(element){
-  this.elem = element;
-}; 
-
-CreateElement.prototype.create = function(tagName){
-    this.elem = document.createElement(tagName);
-    //this.attr();
-    return this.elem;
+  edit(data) { 
+      Object.assign(this.data, data);
+  }
+      
+  get(){
+      return this.data;
+  }
 }
 
-CreateElement.prototype.attr = function(element, attributes = []){
-  if(attributes.length > 0){
-    attributes.forEach(attr => {
-      element.setAttribute(attr[0], attr[1]);
-    });
-  }      
-      return this.elem
-}
 
-CreateElement.prototype.html = function(element, value){
-    console.log(element);
-    if(value){
-      element.innerHTML += value;
-      this.elem = element;
-      return this.elem
-    }else{
-      return this.elem;
-    } 
+
+
+
+class ContactsApp extends Contacts {
+
+  init(){
+      let contElemContainer = null;
+      let contactContainer = this.createElement('div',[['class', 'contact-container']]);
+      let body = document.querySelector('body');
+      body.appendChild(contactContainer);
+
+      let formContainer = this.createElement('form');
+      let nameInput = this.createElement('input', [['type', 'text'],
+      ['placeholder', 'name'], ['class', 'name']]);
+      let emailInput = this.createElement('input', [['type', 'text'],
+      ['placeholder', 'email'], ['class', 'email']]);
+      let addressInput = this.createElement('input', [['type', 'text'],
+      ['placeholder', 'address'], ['class', 'address']]);
+      let phoneInput = this.createElement('input', [['type', 'text'],
+      ['placeholder', 'phone'], ['class', 'phone']]);
+      let btnAdd = this.createElement('button', [['type', 'submit'], ['class', 'add']], 'Add');
+      this.contElemContainer = this.createElement('div',[['class', 'contacts']]);
+
+      formContainer.addEventListener('submit', event => {
+          event.preventDefault();
+          this.data = {
+              id: 0,
+              name: nameInput.value,
+              email: emailInput.value,
+              address: addressInput.value,
+              phone: phoneInput.value,
+          }
+          console.log(this.data);
+          
+          super.add(this.data);
+          nameInput.value = '';
+          emailInput.value = '';
+          addressInput.value = '';
+          phoneInput.value = '';
+
+          console.log(this.data);
+
+          this.onAdd(this.data);
+      });
+
+      contactContainer.append(formContainer, this.contElemContainer);
+      formContainer.append(nameInput, emailInput, addressInput, phoneInput, btnAdd);
+      body.append(contactContainer);
   }
-/*
-CreateElement.prototype.search = function(element, selector){
-    this.elems = this.document.querySelectorAll(selector);
-    return this.elems;
-  }
-*/
-
-
-CreateElement.prototype.addClass = function(element, className) {
-    this.elem = element.classList.add(className);
-    return this.elem;
-  }
-
-CreateElement.prototype.removeClass = function(element, className){
-    this.elem = element.classList.remove(className);
-    return this.elem;
+      
+  createElement(elem, attributes = [], content = null) {
+      let element = document.createElement(elem);
+      if (attributes.length > 0){
+          attributes.forEach(attr =>{
+              element.setAttribute(attr[0], attr[1]);
+          });
+      }
+      if(content !== null) {
+          element.innerText = content;
+      }
+      return element;
   }
 
+  onAdd(data) {
+      this.contElemContainer.innerHTML ='';   
+      this.contacts.forEach(contact => {
+          let contactElem = this.createElement('div',[['class', 'contact_elem']]);
+          let contactName = this.createElement('h2',[['class', 'name']], contact.name);
+          let contactEmail = this.createElement('p',[['class', 'email']], contact.email);
+          let contactAddress = this.createElement('p',[['class', 'address']], contact.address);
+          let contactPhone = this.createElement('p',[['class', 'phone']], contact.phone); 
 
-CreateElement.prototype.toggleClass = function(element, className) {
-    this.elem = element.classList.toggle(className);
-    return this.elem;
+          let delButton = this.createElement('button',[['class', 'delete']], 'Delete');
+          let editButton = this.createElement('button',[['class', 'edit']], 'Edit'); 
+
+                      
+          delButton.addEventListener('click', () => { 
+              super.remove(contact.id);
+              this.onAdd();
+          });
+
+          let flag = true;
+          editButton.addEventListener('click', () =>{
+              if(flag){
+                  contactName.contentEditable = true;
+                  contactEmail.contentEditable = true;
+                  contactAddress.contentEditable = true;
+                  contactPhone.contentEditable = true;
+                  editButton.innerText = 'Save';
+                  flag = !flag;  
+              }else{
+                 contactName.contentEditable = false;
+                  contactEmail.contentEditable = false;
+                  contactAddress.contentEditable = false;
+                  contactPhone.contentEditable = false;
+                  editButton.innerText = 'Edit';
+                  flag = !flag;
+                  
+                  let data = {
+                      name: contactName.innerText,
+                      email: contactEmail.innerText,
+                      address: contactAddress.innerText,
+                      phone: contactPhone.innerText,
+                  } 
+                  super.edit(this.data.id, data);
+              }
+              console.log(this.notes);
+          });
+
+          contactElem.append(contactName, contactEmail, contactAddress, contactPhone, editButton, delButton);
+          this.contElemContainer.append(contactElem);
+      })
+      
   }
 
-CreateElement.prototype.hasClass = function(element, className) {
-    this.elem = element.classList.contains(className);
-    if(this.elem) console.log("The element has got the class '" + className + "'.");
-    else ("The element hasn't got the class '" + className + "'.")
-    return this.elem;
+  onEdit(data) {
+      Object.assign(this.data, data);
   }
+  
+  onRemove() {}
 
-CreateElement.prototype.append = function(element, newElement, beforeElement){
-    if(beforeElement) {
-      this.elem = element.before(newElement);
-      return this.elem;
-    }else{
-      this.elem = element.appendChild(newElement);
-      return this.elem;
-    } 
+  get() {
+      return this.data;
   }
+   }  
 
-CreateElement.prototype.on = function(element, eventName, funcName){
-    element.addEventListener(eventName, funcName);
-  }
+let contact = new ContactsApp();
+contact.init();
 
-
-
-let createElement = new CreateElement();
-
-let div = 'div';
-let newElem = createElement.create(div);
-console.log(newElem);
-
-
-let attr = [['id', 'block']];
-createElement.attr(newElem, attr);
-
-let value = 'Some inner text';
-createElement.html(newElem, value);
-
-let className = 'promo__block';
-createElement.addClass(newElem, className);
-createElement.hasClass(newElem, className);
-console.log(newElem);
-
-
-createElement.append(body, newElem);
-
-const funcName = function(){
-  console.log('it works');
-};
-createElement.on(newElem, 'click', funcName);
 
 
